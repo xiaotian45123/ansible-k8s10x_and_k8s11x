@@ -1,0 +1,2 @@
+# ansible-k8s10x_and_k8s11x
+ansible一键安装k8s10x和k8s11x
