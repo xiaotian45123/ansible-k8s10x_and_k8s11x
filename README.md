@@ -30,7 +30,9 @@ k8s-node
 
 [all:vars]
 local_images=registry.cn-hangzhou.aliyuncs.com/k8sth
+
 k8s_version=1.10.5
+
 vip=192.168.150.186
 
 #type表示keepalived的类型是master或者backp
