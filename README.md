@@ -26,9 +26,11 @@ ansible一键安装k8s10x和k8s11x
 [k8s-all:children]
 
 k8s-master
+
 k8s-node
 
 [all:vars]
+
 local_images=registry.cn-hangzhou.aliyuncs.com/k8sth
 
 k8s_version=1.10.5
