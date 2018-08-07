@@ -21,6 +21,9 @@
 - name: pause-amd64:3.1镜像bug处理
   shell: docker pull {{local_images}}/pause-amd64:3.1 &&  docker tag  {{local_images}}/pause-amd64:3.1   k8s.gcr.io/pause:3.1
 
+- name: pause-amd64:3.1镜像bug处理
+  shell: docker pull {{local_images}}/pause:3.1 
+  
 - name: kubeadm初始化，如果失败会终止整个k8s集群的初始化
   shell: kubeadm  init --config /root/kubeadm-config.yaml
   register: info
