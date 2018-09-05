@@ -2,9 +2,18 @@ apiVersion: kubeadm.k8s.io/v1alpha1
 kind: MasterConfiguration
 etcd:
   endpoints:
+{% if etcd_has_ca %}
+{% for host in groups['k8s-master'] %}
+  - https://{{host}}:2379
+{% endfor %}
+  caFile: /etc/etcd/ca.pem
+  certFile: /etc/etcd/client.pem
+  keyFile: /etc/etcd/client-key.pem
+{% else %}
 {% for host in groups['k8s-master'] %}
   - http://{{host}}:2379
 {% endfor %}
+{% endif %}
   dataDir: /var/lib/etcd
 
 networking:
