@@ -1,0 +1,37 @@
+[Unit]
+Description=etcd
+Documentation=https://github.com/coreos/etcd
+Conflicts=etcd.service
+Conflicts=etcd2.service
+
+[Service]
+Type=notify
+Restart=always
+RestartSec=5s
+LimitNOFILE=40000
+TimeoutStartSec=0
+
+ExecStart=/usr/bin/etcd \
+    --name {{ ansible_hostname }} \
+    --data-dir /var/lib/etcd \
+    --listen-client-urls https://{{ inventory_hostname }}:2379 \
+    --advertise-client-urls https://{{ inventory_hostname }}:2379 \
+    --listen-peer-urls https://{{ inventory_hostname }}:2380 \
+    --initial-advertise-peer-urls https://{{ inventory_hostname }}:2380 \
+    --cert-file=/etc/etcd/server.pem \
+    --key-file=/etc/etcd/server-key.pem \
+    --client-cert-auth \
+    --trusted-ca-file=/etc/etcd/ca.pem \
+    --peer-cert-file=/etc/etcd/peer.pem \
+    --peer-key-file=/etc/etcd/peer-key.pem \
+    --peer-client-cert-auth \
+    --peer-trusted-ca-file=/etc/etcd/ca.pem \
+    --initial-cluster  {{ hostvars[groups['k8s-master'][0]]['name'] }}=https://{{ groups['k8s-master'][0] }}:2380,{{ hostvars[groups['k8s-master'][1]]['name'] }}=https://{{ groups['k8s-master'][1] }}:2380,{{ hostvars[groups['k8s-master'][2]]['name'] }}=https://{{ groups['k8s-master'][2] }}:2380 \
+    --initial-cluster-token my-etcd-token \
+    --initial-cluster-state new
+
+
+[Install]
+WantedBy=multi-user.target
+
+
