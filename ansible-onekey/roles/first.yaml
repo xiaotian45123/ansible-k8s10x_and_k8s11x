@@ -11,5 +11,6 @@
 
 - hosts: k8s-all
   roles:
-  - { role: etcd, when: order is defined }
+  - { role: etcd, when: order is defined and not etcd_has_ca}
+  - { role: etcd-ca, when: order is defined and etcd_has_ca}
 
