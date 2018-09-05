@@ -1,0 +1,40 @@
+---
+- name: install etcd
+  yum: name=etcd state=present
+
+- name: install cfssl
+  shell: curl https://pkg.cfssl.org/R1.2/cfssl_linux-amd64 -o /usr/local/bin/cfssl;
+         curl https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64 -o /usr/local/bin/cfssljson;
+         chmod +x /usr/local/bin/cfssl /usr/local/bin/cfssljson
+
+- name: copy ca config
+# src 最后添加'/'代表复制目录下所有文件，反之代表复制目录
+  copy: src=/etc/ansible/roles/etcd-ca/ca-config-client/ dest=/etc/etcd/
+  when: (  order  is defined ) and  ( order == 1 )
+
+- name: generate base ca & key
+  script: /etc/ansible/roles/etcd-ca/shells/etcd-ca-generate-client.sh
+  when: (  order  is defined ) and  ( order == 1 )
+
+- name: fetch etcd ca files
+  fetch: src=/etc/etcd/etcd-ca.tar.gz dest=/tmp/ flat=yes
+  when: (  order  is defined ) and  ( order == 1 )
+
+- name: copy ca files to other master
+  copy: src=/tmp/etcd-ca.tar.gz dest=/etc/etcd/
+  when: (  order  is defined ) and  ( order != 1 )
+
+- name: copy ca-config-server template to all masters
+  template: src=/etc/ansible/roles/etcd-ca/ca-config-server/config.json.j2 dest=/etc/etcd/config.json
+
+- name: finish generate etcd ca
+  script: /etc/ansible/roles/etcd-ca/shells/etcd-ca-generate-server.sh
+
+- name: copy file etcd.service
+  template: src=/etc/ansible/roles/etcd-ca/templates/etcd.service.j2 dest=/etc/systemd/system/etcd.service mode=755
+
+- name: mk data dir
+  shell: mkdir -p /var/lib/etcd
+
+- name: start etcd
+  service: name=etcd state=started enabled=yes daemon_reload=yes
