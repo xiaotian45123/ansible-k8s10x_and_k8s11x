@@ -8,30 +8,30 @@
          chmod +x /usr/local/bin/cfssl /usr/local/bin/cfssljson
 
 - name: copy ca config
-# src 最后添加'/'代表复制改目录下所有文件，反之代表复制目录
-  copy: src=/Users/ddy/workspace/kubernetes/kubernetes/kubeadm-ha/roles/etcd-ca/ca-config-client/ dest=/etc/etcd/
+# src 最后添加'/'代表复制目录下所有文件，反之代表复制目录
+  copy: src=/etc/ansible/roles/etcd-ca/ca-config-client/ dest=/etc/etcd/
   when: (  order  is defined ) and  ( order == 1 )
 
 - name: generate base ca & key
-  script: /Users/ddy/workspace/kubernetes/kubernetes/kubeadm-ha/roles/etcd-ca/shells/etcd-ca-generate-client.sh
+  script: /etc/ansible/roles/etcd-ca/shells/etcd-ca-generate-client.sh
   when: (  order  is defined ) and  ( order == 1 )
 
 - name: fetch etcd ca files
-  fetch: src=/etc/etcd/etcd-ca.tar.gz dest=/Users/ddy/tmp/ flat=yes
+  fetch: src=/etc/etcd/etcd-ca.tar.gz dest=/tmp/ flat=yes
   when: (  order  is defined ) and  ( order == 1 )
 
 - name: copy ca files to other master
-  copy: src=/Users/ddy/tmp/etcd-ca.tar.gz dest=/etc/etcd/
+  copy: src=/tmp/etcd-ca.tar.gz dest=/etc/etcd/
   when: (  order  is defined ) and  ( order != 1 )
 
 - name: copy ca-config-server template to all masters
-  template: src=/Users/ddy/workspace/kubernetes/kubernetes/kubeadm-ha/roles/etcd-ca/ca-config-server/config.json.j2 dest=/etc/etcd/config.json
+  template: src=/etc/ansible/roles/etcd-ca/ca-config-server/config.json.j2 dest=/etc/etcd/config.json
 
 - name: finish generate etcd ca
-  script: /Users/ddy/workspace/kubernetes/kubernetes/kubeadm-ha/roles/etcd-ca/shells/etcd-ca-generate-server.sh
+  script: /etc/ansible/roles/etcd-ca/shells/etcd-ca-generate-server.sh
 
 - name: copy file etcd.service
-  template: src=/Users/ddy/workspace/kubernetes/kubernetes/kubeadm-ha/roles/etcd-ca/templates/etcd.service.j2 dest=/etc/systemd/system/etcd.service mode=755
+  template: src=/etc/ansible/roles/etcd-ca/templates/etcd.service.j2 dest=/etc/systemd/system/etcd.service mode=755
 
 - name: mk data dir
   shell: mkdir -p /var/lib/etcd
