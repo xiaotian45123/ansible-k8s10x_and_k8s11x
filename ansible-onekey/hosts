@@ -30,6 +30,7 @@ k8s-node
 local_images=registry.cn-hangzhou.aliyuncs.com/k8sth
 k8s_version=1.11.1
 vip=192.168.150.186
+etcd_has_ca=True
 
 
 ## green.example.com
