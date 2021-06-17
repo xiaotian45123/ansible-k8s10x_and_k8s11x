@@ -9,7 +9,7 @@
 4: 所有执行均采用root用户
 5：github下载地址：https://github.com/xiaotian45123/ansible-k8s10x_and_k8s11x
 6：安装测试通过的K8S版本有：1.10.3、1.10.4、1.10.5、1.11.0、1.11.1，其他版本请大家自行测试
-7：在阿里云不能使用阿里云得SLB服务代替keepalived+haproxy，因为阿里云的SLB不支持后端真实服务器既做服务端又做客户端，我研究过阿里云K8S部署脚本，阿里云SLB只做node节点kebelet访问master的负载功能
+7：在阿里云不能使用阿里云得SLB服务代替keepalived+haproxy，因为阿里云的SLB不支持后端真实服务器既做服务端又做客户端
 8：本ansible一键安装可用于生产环境
 9：同时欢迎大家改进并提交到github,这个我后期一直会维护，由于不太会用github，所以大家有问题也可以先留言
 
